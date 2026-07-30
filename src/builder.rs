@@ -51,6 +51,8 @@ impl<'a> CaptchaBuilder<'a> {
         let text = CaptchaGenerator::generate(self.length, None);
         let mut image: RgbImage = ImageBuffer::from_pixel(self.width, self.height, Rgb([255, 255, 255]));
 
+        Self::apply_noise(&mut image);
+
         let fm = self.font_manager.unwrap_or_default();
         let scale = Scale::uniform(30.0);
         let mut rng = rand::rng();
@@ -94,6 +96,65 @@ impl<'a> CaptchaBuilder<'a> {
         }
 
         (text, image)
+    }
+
+    fn apply_noise(image: &mut RgbImage) {
+        let mut rng = rand::rng();
+        let width = image.width() as i32;
+        let height = image.height() as i32;
+
+        let line_count = rng.random_range(25..=35);
+        for _ in 0..line_count {
+            let color = Rgb([
+                rng.random_range(0..=220),
+                rng.random_range(0..=220),
+                rng.random_range(0..=220),
+            ]);
+            let x0 = rng.random_range(0..width);
+            let y0 = rng.random_range(0..height);
+            let x1 = rng.random_range(0..width);
+            let y1 = rng.random_range(0..height);
+            
+            Self::draw_line(image, x0, y0, x1, y1, color);
+        }
+
+        let dot_count = rng.random_range(50..=80);
+        for _ in 0..dot_count {
+            let color = Rgb([
+                rng.random_range(0..=255),
+                rng.random_range(0..=255),
+                rng.random_range(0..=255),
+            ]);
+            let x = rng.random_range(0..width as u32);
+            let y = rng.random_range(0..height as u32);
+            image.put_pixel(x, y, color);
+        }
+    }
+
+    fn draw_line(image: &mut RgbImage, mut x0: i32, mut y0: i32, x1: i32, y1: i32, color: Rgb<u8>) {
+        let dx = (x1 - x0).abs();
+        let sx = if x0 < x1 { 1 } else { -1 };
+        let dy = -(y1 - y0).abs();
+        let sy = if y0 < y1 { 1 } else { -1 };
+        let mut err = dx + dy;
+
+        loop {
+            if x0 >= 0 && x0 < image.width() as i32 && y0 >= 0 && y0 < image.height() as i32 {
+                image.put_pixel(x0 as u32, y0 as u32, color);
+            }
+            if x0 == x1 && y0 == y1 {
+                break;
+            }
+            let e2 = 2 * err;
+            if e2 >= dy {
+                err += dy;
+                x0 += sx;
+            }
+            if e2 <= dx {
+                err += dx;
+                y0 += sy;
+            }
+        }
     }
 
     fn generate_dynamic_grid(char_count: usize, width: u32, height: u32) -> Vec<GridCell> {
