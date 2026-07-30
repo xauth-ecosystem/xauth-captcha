@@ -29,7 +29,6 @@ impl<'a> CaptchaBuilder<'a> {
             filters: vec![
                 Box::new(NoiseFilter::default()), 
                 Box::new(GeometryFilter::default()),
-                Box::new(WaveFilter::default()),
             ],
         }
     }
