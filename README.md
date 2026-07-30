@@ -13,17 +13,20 @@ A lightweight, robust, and dependency-minimal CAPTCHA generation library for Rus
 ## Usage
 
 ```rust
-use xauth_captcha::CaptchaBuilder;
+use xauth_captcha::{CaptchaBuilder, CaptchaConfig};
 
 fn main() {
-    // Generate a secure 6-character captcha
+    // You can use the Builder directly
     let (text, image) = CaptchaBuilder::new()
         .width(128)
         .height(128)
         .length(6)
         .build();
     
-    // Save to file or encode to base64 for web transit
+    // OR initialize from a serde config
+    let config = CaptchaConfig::default();
+    let (text_from_config, image_from_config) = CaptchaBuilder::from_config(&config).build();
+
     image.save("captcha_output.png").unwrap();
     println!("Generated CAPTCHA: {}", text);
 }
