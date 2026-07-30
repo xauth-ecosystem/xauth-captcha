@@ -1,3 +1,6 @@
+pub mod geometry;
+pub mod noise;
+
 use image::RgbImage;
 
 /// A trait for applying custom image filters or obfuscation to the CAPTCHA background.
