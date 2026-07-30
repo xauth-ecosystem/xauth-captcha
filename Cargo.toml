@@ -7,3 +7,4 @@ edition = "2024"
 image = "0.25.10"
 rand = "0.10.2"
 rusttype = "0.9.3"
+serde = { version = "1.0.229", features = ["derive"] }
