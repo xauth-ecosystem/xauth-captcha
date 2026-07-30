@@ -4,4 +4,4 @@ pub mod font;
 pub mod generator;
 
 pub use builder::CaptchaBuilder;
-pub use filters::{geometry::GeometryFilter, noise::NoiseFilter, CaptchaFilter};
+pub use filters::{geometry::GeometryFilter, noise::NoiseFilter, wave::WaveFilter, CaptchaFilter};
