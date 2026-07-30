@@ -1,6 +1,6 @@
 use super::CaptchaFilter;
 use image::{Rgb, RgbImage};
-use rand::Rng;
+use rand::RngExt;
 
 pub struct NoiseFilter {
     pub dots: usize,
