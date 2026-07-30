@@ -1,3 +1,4 @@
+pub mod font;
 pub mod generator;
 
 use image::{ImageBuffer, Rgb, RgbImage};
@@ -12,9 +13,8 @@ pub fn generate_captcha() -> Result<(), Box<dyn Error>> {
     // Create a white background image
     let mut image: RgbImage = ImageBuffer::from_pixel(width, height, Rgb([255, 255, 255]));
 
-    // Load a bundled font
-    let font_data = include_bytes!("../fonts/SourceCodePro.ttf");
-    let font = Font::try_from_bytes(font_data as &[u8]).ok_or("Failed to load font")?;
+    // Load fonts using FontManager
+    let font_manager = font::FontManager::new();
 
     let scale = Scale::uniform(30.0);
     let mut rng = rand::rng();
@@ -29,6 +29,8 @@ pub fn generate_captcha() -> Result<(), Box<dyn Error>> {
         // Random offset for x and y
         let x_offset = rng.random_range(-5..=5);
         let y_offset = rng.random_range(-5..=5);
+        
+        let font = font_manager.get_random_font().ok_or("Failed to get font")?;
         
         let glyph = font.glyph(c)
             .scaled(scale)
