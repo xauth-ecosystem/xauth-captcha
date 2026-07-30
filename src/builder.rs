@@ -195,7 +195,7 @@ impl<'a> CaptchaBuilder<'a> {
         let font_size = max_cell_size * 0.8;
         let scale = Scale::uniform(font_size.clamp(10.0, usable_height * 0.8));
 
-        let step_y = usable_height / (rows as f32 + 1.0);
+        let cell_height = usable_height / rows as f32;
         let mut rng = rand::rng();
         let mut current_char = 0;
 
@@ -206,11 +206,11 @@ impl<'a> CaptchaBuilder<'a> {
                 cols
             };
 
-            let step_x = usable_width / (chars_in_this_row as f32 + 1.0);
-            let y_base = margin as f32 + step_y * (row as f32 + 1.0);
+            let cell_width = usable_width / chars_in_this_row as f32;
+            let y_base = margin as f32 + (row as f32 * cell_height) + (cell_height / 2.0);
 
             for col in 0..chars_in_this_row {
-                let x_base = margin as f32 + step_x * (col as f32 + 1.0);
+                let x_base = margin as f32 + (col as f32 * cell_width) + (cell_width / 2.0);
                 grid.push(GridCell {
                     x: x_base as i32 + rng.random_range(-5..=5),
                     y: y_base as i32 + rng.random_range(-5..=5),
