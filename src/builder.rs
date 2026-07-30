@@ -1,6 +1,6 @@
+use crate::filters::{CaptchaFilter, geometry::GeometryFilter, noise::NoiseFilter};
 use crate::font::FontManager;
 use crate::generator::CaptchaGenerator;
-use crate::filters::{geometry::GeometryFilter, noise::NoiseFilter, CaptchaFilter};
 use image::{ImageBuffer, Rgb, RgbImage};
 use rand::RngExt;
 use rusttype::Scale;
@@ -27,7 +27,7 @@ impl<'a> CaptchaBuilder<'a> {
             length: 5,
             font_manager: None,
             filters: vec![
-                Box::new(NoiseFilter::default()), 
+                Box::new(NoiseFilter::default()),
                 Box::new(GeometryFilter::default()),
             ],
         }
@@ -85,7 +85,8 @@ impl<'a> CaptchaBuilder<'a> {
 
     pub fn build(self) -> (String, RgbImage) {
         let text = CaptchaGenerator::generate(self.length, None);
-        let mut image: RgbImage = ImageBuffer::from_pixel(self.width, self.height, Rgb([255, 255, 255]));
+        let mut image: RgbImage =
+            ImageBuffer::from_pixel(self.width, self.height, Rgb([255, 255, 255]));
 
         let fm = self.font_manager.unwrap_or_default();
         let scale = Scale::uniform(30.0);
@@ -97,19 +98,16 @@ impl<'a> CaptchaBuilder<'a> {
             let font = fm.get_random_font().expect("No fonts available");
 
             let cell = &grid[i];
-            
+
             // Random offset for x and y
             let safe_offset = 15;
             let x_offset = rng.random_range(-safe_offset..=safe_offset);
             let y_offset = rng.random_range(-safe_offset..=safe_offset);
 
-            let glyph = font
-                .glyph(c)
-                .scaled(scale)
-                .positioned(rusttype::point(
-                    (cell.x + x_offset) as f32,
-                    (cell.y + y_offset) as f32,
-                ));
+            let glyph = font.glyph(c).scaled(scale).positioned(rusttype::point(
+                (cell.x + x_offset) as f32,
+                (cell.y + y_offset) as f32,
+            ));
 
             let color = Rgb([
                 rng.random_range(0..150),
@@ -131,14 +129,19 @@ impl<'a> CaptchaBuilder<'a> {
                 glyph.draw(|x, y, v| {
                     let rx = x as f32 - cx;
                     let ry = y as f32 - cy;
-                    
+
                     let rot_x = rx * cos_a - ry * sin_a;
                     let rot_y = rx * sin_a + ry * cos_a;
-                    
+
                     let px = (rot_x + cx + bounding_box.min.x as f32) as i32;
                     let py = (rot_y + cy + bounding_box.min.y as f32) as i32;
 
-                    if px >= 0 && px < self.width as i32 && py >= 0 && py < self.height as i32 && v > 0.5 {
+                    if px >= 0
+                        && px < self.width as i32
+                        && py >= 0
+                        && py < self.height as i32
+                        && v > 0.5
+                    {
                         image.put_pixel(px as u32, py as u32, color);
                     }
                 });
@@ -156,9 +159,9 @@ impl<'a> CaptchaBuilder<'a> {
     fn generate_dynamic_grid(char_count: usize, width: u32, height: u32) -> Vec<GridCell> {
         let mut grid = Vec::with_capacity(char_count);
         let margin = 20;
-        
+
         let usable_width = (width as i32).saturating_sub(2 * margin).max(1) as f32;
-        
+
         let mut rng = rand::rng();
 
         if char_count <= 3 {

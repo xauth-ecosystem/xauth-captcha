@@ -6,4 +6,4 @@ pub mod generator;
 
 pub use builder::CaptchaBuilder;
 pub use config::CaptchaConfig;
-pub use filters::{geometry::GeometryFilter, noise::NoiseFilter, wave::WaveFilter, CaptchaFilter};
+pub use filters::{CaptchaFilter, geometry::GeometryFilter, noise::NoiseFilter, wave::WaveFilter};

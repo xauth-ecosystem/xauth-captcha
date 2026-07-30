@@ -29,6 +29,12 @@ impl Default for CaptchaConfig {
     }
 }
 
-fn default_width() -> u32 { 128 }
-fn default_height() -> u32 { 128 }
-fn default_length() -> usize { 5 }
+fn default_width() -> u32 {
+    128
+}
+fn default_height() -> u32 {
+    128
+}
+fn default_length() -> usize {
+    5
+}

@@ -11,13 +11,13 @@ impl CaptchaGenerator {
         let chars = charset.unwrap_or(DEFAULT_CHARSET);
         let chars_vec: Vec<char> = chars.chars().collect();
         let mut rng = rand::rng();
-        
+
         let mut result = String::with_capacity(length);
         for _ in 0..length {
             let idx = rng.random_range(0..chars_vec.len());
             result.push(chars_vec[idx]);
         }
-        
+
         result
     }
 }
