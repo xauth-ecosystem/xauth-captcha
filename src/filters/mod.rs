@@ -1,5 +1,6 @@
 pub mod geometry;
 pub mod noise;
+pub mod wave;
 
 use image::RgbImage;
 
