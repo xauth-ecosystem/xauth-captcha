@@ -39,6 +39,18 @@ cargo run --example simple
 
 Check the root directory for the resulting `captcha_output.png` file!
 
+## Contributing
+
+Contributions are welcome and appreciated! Here's how you can contribute:
+
+1. Fork the repository on GitHub.
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
+
+Please make sure to update tests as appropriate and adhere to the existing coding style.
+
 ## License
 
 This library is licensed under the CSSM Unlimited License v2.0 (CSSM-ULv2). Please note that this is a custom license. See the [LICENSE](LICENSE) file for details.
