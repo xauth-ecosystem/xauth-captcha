@@ -1,3 +1,8 @@
+//! Captcha generation engine and image builder.
+//! 
+//! The core generation and dynamic grid algorithms are based on 
+//! the original PHP implementation by `tarunk04/Captcha_Generator`.
+
 use crate::filters::{CaptchaFilter, geometry::GeometryFilter, noise::NoiseFilter};
 use crate::font::FontManager;
 use crate::generator::CaptchaGenerator;
