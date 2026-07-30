@@ -102,10 +102,9 @@ impl<'a> CaptchaBuilder<'a> {
             ImageBuffer::from_pixel(self.width, self.height, Rgb([255, 255, 255]));
 
         let fm = self.font_manager.unwrap_or_default();
-        let scale = Scale::uniform(30.0);
         let mut rng = rand::rng();
 
-        let grid = Self::generate_dynamic_grid(self.length, self.width, self.height);
+        let (grid, scale) = Self::generate_dynamic_grid(self.length, self.width, self.height);
 
         for (i, c) in text.chars().enumerate() {
             let font = fm.get_random_font().expect("No fonts available");
@@ -169,45 +168,58 @@ impl<'a> CaptchaBuilder<'a> {
         (text, image)
     }
 
-    fn generate_dynamic_grid(char_count: usize, width: u32, height: u32) -> Vec<GridCell> {
+    fn generate_dynamic_grid(char_count: usize, width: u32, height: u32) -> (Vec<GridCell>, Scale) {
         let mut grid = Vec::with_capacity(char_count);
-        let margin = 20;
+        let margin = (width.min(height) / 10).clamp(5, 20) as i32;
 
         let usable_width = (width as i32).saturating_sub(2 * margin).max(1) as f32;
+        let usable_height = (height as i32).saturating_sub(2 * margin).max(1) as f32;
 
-        let mut rng = rand::rng();
+        let mut best_cols = 1;
+        let mut max_cell_size = 0.0_f32;
 
-        if char_count <= 3 {
-            let step_x = usable_width / (char_count + 1) as f32;
-            for i in 0..char_count {
-                grid.push(GridCell {
-                    x: margin + (step_x * (i + 1) as f32) as i32,
-                    y: (height / 2) as i32,
-                });
-            }
-        } else {
-            let top_row_count = (char_count as f32 / 2.0).ceil() as usize;
-            let bottom_row_count = char_count - top_row_count;
-
-            let step_x_top = usable_width / (top_row_count + 1) as f32;
-            let step_x_bottom = usable_width / (bottom_row_count + 1) as f32;
-
-            for i in 0..top_row_count {
-                grid.push(GridCell {
-                    x: margin + (step_x_top * (i + 1) as f32) as i32 + rng.random_range(-5..=5),
-                    y: (height as f32 * 0.35) as i32 + rng.random_range(-5..=5),
-                });
-            }
-
-            for i in 0..bottom_row_count {
-                grid.push(GridCell {
-                    x: margin + (step_x_bottom * (i + 1) as f32) as i32 + rng.random_range(-5..=5),
-                    y: (height as f32 * 0.75) as i32 + rng.random_range(-5..=5),
-                });
+        for c in 1..=char_count {
+            let r = (char_count as f32 / c as f32).ceil() as usize;
+            let cell_w = usable_width / c as f32;
+            let cell_h = usable_height / r as f32;
+            let size = cell_w.min(cell_h);
+            if size > max_cell_size {
+                max_cell_size = size;
+                best_cols = c;
             }
         }
 
-        grid
+        let cols = best_cols;
+        let rows = (char_count as f32 / cols as f32).ceil() as usize;
+
+        let font_size = max_cell_size * 0.8;
+        let scale = Scale::uniform(font_size.clamp(10.0, usable_height * 0.8));
+
+        let step_y = usable_height / (rows as f32 + 1.0);
+        let mut rng = rand::rng();
+        let mut current_char = 0;
+
+        for row in 0..rows {
+            let chars_in_this_row = if row == rows - 1 {
+                char_count - current_char
+            } else {
+                cols
+            };
+
+            let step_x = usable_width / (chars_in_this_row as f32 + 1.0);
+            let y_base = margin as f32 + step_y * (row as f32 + 1.0);
+
+            for col in 0..chars_in_this_row {
+                let x_base = margin as f32 + step_x * (col as f32 + 1.0);
+                grid.push(GridCell {
+                    x: x_base as i32 + rng.random_range(-5..=5),
+                    y: y_base as i32 + rng.random_range(-5..=5),
+                });
+                current_char += 1;
+            }
+        }
+
+        (grid, scale)
     }
 }
 
