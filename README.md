@@ -1,5 +1,7 @@
 # xauth-captcha
 
+[![Rust CI](https://github.com/xauth-ecosystem/xauth-captcha/actions/workflows/rust.yml/badge.svg)](https://github.com/xauth-ecosystem/xauth-captcha/actions/workflows/rust.yml)
+
 A lightweight, robust, and dependency-minimal CAPTCHA generation library for Rust. Originally designed for the `xauth-ecosystem`, it provides an easy-to-use Builder API, dynamic character grids, and built-in obfuscation (noise and dots).
 
 ## Features
