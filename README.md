@@ -1,3 +1,5 @@
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct.svg)](https://stand-with-ukraine.pp.ua)
+
 # xauth-captcha
 
 [![Rust CI](https://github.com/xauth-ecosystem/xauth-captcha/actions/workflows/rust.yml/badge.svg)](https://github.com/xauth-ecosystem/xauth-captcha/actions/workflows/rust.yml)
