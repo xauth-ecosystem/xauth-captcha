@@ -1,6 +1,6 @@
 use crate::font::FontManager;
 use crate::generator::CaptchaGenerator;
-use crate::filters::{geometry::GeometryFilter, noise::NoiseFilter, CaptchaFilter};
+use crate::filters::{geometry::GeometryFilter, noise::NoiseFilter, wave::WaveFilter, CaptchaFilter};
 use image::{ImageBuffer, Rgb, RgbImage};
 use rand::RngExt;
 use rusttype::Scale;
@@ -26,7 +26,11 @@ impl<'a> CaptchaBuilder<'a> {
             height: 128,
             length: 5,
             font_manager: None,
-            filters: vec![Box::new(NoiseFilter::default()), Box::new(GeometryFilter::default())],
+            filters: vec![
+                Box::new(NoiseFilter::default()), 
+                Box::new(GeometryFilter::default()),
+                Box::new(WaveFilter::default()),
+            ],
         }
     }
 
@@ -63,10 +67,6 @@ impl<'a> CaptchaBuilder<'a> {
     pub fn build(self) -> (String, RgbImage) {
         let text = CaptchaGenerator::generate(self.length, None);
         let mut image: RgbImage = ImageBuffer::from_pixel(self.width, self.height, Rgb([255, 255, 255]));
-
-        for filter in &self.filters {
-            filter.apply(&mut image);
-        }
 
         let fm = self.font_manager.unwrap_or_default();
         let scale = Scale::uniform(30.0);
@@ -124,6 +124,11 @@ impl<'a> CaptchaBuilder<'a> {
                     }
                 });
             }
+        }
+
+        // Apply filters at the very end so they distort the text too!
+        for filter in &self.filters {
+            filter.apply(&mut image);
         }
 
         (text, image)
