@@ -33,6 +33,26 @@ impl<'a> CaptchaBuilder<'a> {
         }
     }
 
+    pub fn from_config(config: &crate::config::CaptchaConfig) -> Self {
+        let mut builder = Self::new()
+            .width(config.width)
+            .height(config.height)
+            .length(config.length)
+            .clear_filters();
+
+        let dots = config.noise_dots.unwrap_or(65);
+        builder = builder.add_filter(NoiseFilter::new(dots));
+
+        let lines = config.noise_lines.unwrap_or(30);
+        builder = builder.add_filter(GeometryFilter::new(lines));
+
+        if config.enable_wave {
+            builder = builder.add_filter(crate::filters::wave::WaveFilter::default());
+        }
+
+        builder
+    }
+
     pub fn width(mut self, width: u32) -> Self {
         self.width = width;
         self
