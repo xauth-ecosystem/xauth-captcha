@@ -111,15 +111,17 @@ impl<'a> CaptchaBuilder<'a> {
 
             let cell = &grid[i];
 
-            // Random offset for x and y
-            let safe_offset = 15;
-            let x_offset = rng.random_range(-safe_offset..=safe_offset);
-            let y_offset = rng.random_range(-safe_offset..=safe_offset);
+            let v_metrics = font.v_metrics(scale);
+            let h_metrics = font.glyph(c).scaled(scale).h_metrics();
 
-            let glyph = font.glyph(c).scaled(scale).positioned(rusttype::point(
-                (cell.x + x_offset) as f32,
-                (cell.y + y_offset) as f32,
-            ));
+            // Align center of text to center of cell
+            let baseline_y = cell.y as f32 + (v_metrics.ascent + v_metrics.descent) / 2.0;
+            let start_x = cell.x as f32 - (h_metrics.advance_width / 2.0);
+
+            let glyph = font
+                .glyph(c)
+                .scaled(scale)
+                .positioned(rusttype::point(start_x, baseline_y));
 
             let color = Rgb([
                 rng.random_range(0..150),
