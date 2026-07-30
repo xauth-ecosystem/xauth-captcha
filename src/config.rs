@@ -13,6 +13,8 @@ pub struct CaptchaConfig {
     #[serde(default)]
     pub noise_lines: Option<usize>,
     #[serde(default)]
+    pub charset: Option<String>,
+    #[serde(default)]
     pub enable_wave: bool,
 }
 
@@ -24,6 +26,7 @@ impl Default for CaptchaConfig {
             length: default_length(),
             noise_dots: None,
             noise_lines: None,
+            charset: None,
             enable_wave: false,
         }
     }
