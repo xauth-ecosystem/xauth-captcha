@@ -21,3 +21,20 @@ impl CaptchaGenerator {
         result
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_default_length() {
+        let code = CaptchaGenerator::generate(6, None);
+        assert_eq!(code.len(), 6);
+    }
+
+    #[test]
+    fn test_custom_charset() {
+        let code = CaptchaGenerator::generate(10, Some("A"));
+        assert_eq!(code, "AAAAAAAAAA");
+    }
+}
