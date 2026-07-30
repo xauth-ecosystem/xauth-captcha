@@ -1,6 +1,6 @@
 use crate::font::FontManager;
 use crate::generator::CaptchaGenerator;
-use crate::filters::{geometry::GeometryFilter, noise::NoiseFilter, wave::WaveFilter, CaptchaFilter};
+use crate::filters::{geometry::GeometryFilter, noise::NoiseFilter, CaptchaFilter};
 use image::{ImageBuffer, Rgb, RgbImage};
 use rand::RngExt;
 use rusttype::Scale;
