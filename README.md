@@ -37,7 +37,7 @@ fn main() {
 
 ## Configuration
 
-If you are using `xauth-captcha` as a library in a daemon (like `xauthd`), you can deserialize configuration directly from TOML, JSON, or YAML into `CaptchaConfig` using `serde`.
+If you are using `xauth-captcha` as a library in your application, you can deserialize configuration directly from TOML, JSON, or YAML into `CaptchaConfig` using `serde`.
 
 Here is a reference of the available fields:
 
