@@ -1,3 +1,5 @@
+pub mod generator;
+
 use image::{ImageBuffer, Rgb, RgbImage};
 use rand::RngExt;
 use rusttype::{Font, Scale};
@@ -18,7 +20,7 @@ pub fn generate_captcha() -> Result<(), Box<dyn Error>> {
     let mut rng = rand::rng();
     
     // Text to render
-    let text = "TEST5";
+    let text = generator::CaptchaGenerator::generate(5, None);
     
     let x_base = 20;
     let y_base = 60;
