@@ -3,7 +3,7 @@ pub mod generator;
 
 use image::{ImageBuffer, Rgb, RgbImage};
 use rand::RngExt;
-use rusttype::{Font, Scale};
+use rusttype::Scale;
 use std::error::Error;
 
 pub fn generate_captcha() -> Result<(), Box<dyn Error>> {
