@@ -96,11 +96,6 @@ impl<'a> CaptchaBuilder<'a> {
         (text, image)
     }
 
-    struct GridCell {
-        x: i32,
-        y: i32,
-    }
-
     fn generate_dynamic_grid(char_count: usize, width: u32, height: u32) -> Vec<GridCell> {
         let mut grid = Vec::with_capacity(char_count);
         let margin = 20;
@@ -141,4 +136,9 @@ impl<'a> CaptchaBuilder<'a> {
 
         grid
     }
+}
+
+struct GridCell {
+    x: i32,
+    y: i32,
 }
