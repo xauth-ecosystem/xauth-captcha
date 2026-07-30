@@ -14,6 +14,7 @@ pub struct CaptchaBuilder<'a> {
     width: u32,
     height: u32,
     length: usize,
+    charset: Option<String>,
     font_manager: Option<FontManager<'a>>,
     filters: Vec<Box<dyn CaptchaFilter>>,
 }
@@ -30,6 +31,7 @@ impl<'a> CaptchaBuilder<'a> {
             width: 128,
             height: 128,
             length: 5,
+            charset: None,
             font_manager: None,
             filters: vec![
                 Box::new(NoiseFilter::default()),
@@ -43,6 +45,7 @@ impl<'a> CaptchaBuilder<'a> {
             .width(config.width)
             .height(config.height)
             .length(config.length)
+            .charset(config.charset.clone())
             .clear_filters();
 
         let dots = config.noise_dots.unwrap_or(65);
@@ -73,6 +76,11 @@ impl<'a> CaptchaBuilder<'a> {
         self
     }
 
+    pub fn charset(mut self, charset: Option<String>) -> Self {
+        self.charset = charset;
+        self
+    }
+
     pub fn font_manager(mut self, manager: FontManager<'a>) -> Self {
         self.font_manager = Some(manager);
         self
@@ -89,7 +97,7 @@ impl<'a> CaptchaBuilder<'a> {
     }
 
     pub fn build(self) -> (String, RgbImage) {
-        let text = CaptchaGenerator::generate(self.length, None);
+        let text = CaptchaGenerator::generate(self.length, self.charset.as_deref());
         let mut image: RgbImage =
             ImageBuffer::from_pixel(self.width, self.height, Rgb([255, 255, 255]));
 
@@ -232,6 +240,7 @@ mod tests {
             length: 8,
             noise_dots: None,
             noise_lines: None,
+            charset: None,
             enable_wave: false,
         };
         let (text, image) = CaptchaBuilder::from_config(&config).build();
