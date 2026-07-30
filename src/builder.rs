@@ -199,3 +199,36 @@ struct GridCell {
     x: i32,
     y: i32,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_builder_defaults() {
+        let (text, image) = CaptchaBuilder::new()
+            .length(4)
+            .width(100)
+            .height(50)
+            .build();
+        assert_eq!(text.len(), 4);
+        assert_eq!(image.width(), 100);
+        assert_eq!(image.height(), 50);
+    }
+
+    #[test]
+    fn test_builder_from_config() {
+        let config = crate::config::CaptchaConfig {
+            width: 200,
+            height: 100,
+            length: 8,
+            noise_dots: None,
+            noise_lines: None,
+            enable_wave: false,
+        };
+        let (text, image) = CaptchaBuilder::from_config(&config).build();
+        assert_eq!(text.len(), 8);
+        assert_eq!(image.width(), 200);
+        assert_eq!(image.height(), 100);
+    }
+}
