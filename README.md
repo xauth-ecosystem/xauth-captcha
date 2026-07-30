@@ -3,7 +3,7 @@
 [![Rust CI](https://github.com/xauth-ecosystem/xauth-captcha/actions/workflows/rust.yml/badge.svg)](https://github.com/xauth-ecosystem/xauth-captcha/actions/workflows/rust.yml)
 [![Test Coverage](https://img.shields.io/codecov/c/github/xauth-ecosystem/xauth-captcha?label=Test%20Coverage&logo=codecov)](https://app.codecov.io/gh/xauth-ecosystem/xauth-captcha)
 
-A lightweight, robust, and dependency-minimal CAPTCHA generation library for Rust. Originally designed for the `xauth-ecosystem`, it provides an easy-to-use Builder API, dynamic character grids, and built-in obfuscation (noise and dots).
+A lightweight, robust, and dependency-minimal CAPTCHA generation library for Rust. Originally designed for the `xauth-ecosystem`, it provides an easy-to-use Builder API, built-in obfuscation, and a dynamic character grid based on the original PHP algorithm by [tarunk04/Captcha_Generator](https://github.com/tarunk04/Captcha_Generator).
 
 ## Features
 
