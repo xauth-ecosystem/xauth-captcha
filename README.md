@@ -35,6 +35,22 @@ fn main() {
 }
 ```
 
+## Configuration
+
+If you are using `xauth-captcha` as a library in a daemon (like `xauthd`), you can deserialize configuration directly from TOML, JSON, or YAML into `CaptchaConfig` using `serde`.
+
+Here is a reference of the available fields:
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `width` | `u32` | `128` | The total width of the generated image. |
+| `height` | `u32` | `128` | The total height of the generated image. |
+| `length` | `usize` | `5` | The number of characters to generate. |
+| `charset` | `Option<String>`| `None` | Custom character set to use. Defaults to a safe alphabet without ambiguous characters. |
+| `noise_dots` | `Option<usize>` | `None` (65) | Number of random RGB dots scattered across the image. |
+| `noise_lines`| `Option<usize>` | `None` (30) | Number of random Bresenham lines drawn across the image. |
+| `enable_wave`| `bool` | `false` | Whether to apply a sine-wave distortion to the final image. |
+
 ## Running the Example
 
 You can run the included example to generate a sample CAPTCHA image directly:
