@@ -83,10 +83,26 @@ impl<'a> CaptchaBuilder<'a> {
                 rng.random_range(0..150),
             ]);
 
+            let angle: f32 = rng.random_range(-25.0..=25.0);
+            let rad = angle.to_radians();
+            let cos_a = rad.cos();
+            let sin_a = rad.sin();
+
             if let Some(bounding_box) = glyph.pixel_bounding_box() {
+                let width = (bounding_box.max.x - bounding_box.min.x) as f32;
+                let height = (bounding_box.max.y - bounding_box.min.y) as f32;
+                let cx = width / 2.0;
+                let cy = height / 2.0;
+
                 glyph.draw(|x, y, v| {
-                    let px = x as i32 + bounding_box.min.x;
-                    let py = y as i32 + bounding_box.min.y;
+                    let rx = x as f32 - cx;
+                    let ry = y as f32 - cy;
+                    
+                    let rot_x = rx * cos_a - ry * sin_a;
+                    let rot_y = rx * sin_a + ry * cos_a;
+                    
+                    let px = (rot_x + cx + bounding_box.min.x as f32) as i32;
+                    let py = (rot_y + cy + bounding_box.min.y as f32) as i32;
 
                     if px >= 0 && px < self.width as i32 && py >= 0 && py < self.height as i32 && v > 0.5 {
                         image.put_pixel(px as u32, py as u32, color);
