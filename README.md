@@ -10,11 +10,11 @@ A lightweight, robust, and dependency-minimal CAPTCHA generation library for Rus
 
 ## Features
 
-- **Dynamic Grid Layout**: Automatically calculates whether to place text on a single line (<= 3 characters) or intelligently split it into two rows for improved bot resistance.
+- **Dynamic Grid Layout**: Automatically computes the optimal row/column arrangement for any character count by evaluating cell sizes against the image dimensions, maximizing font size while keeping characters bot-resistant.
 - **Built-in Fonts**: Bundles 10 unique TrueType fonts. Each character is rendered using a randomly selected font from the pool.
 - **Lightweight Noise Generation**: Employs a custom, zero-dependency Bresenham's line algorithm to render obfuscation lines and random dots without pulling in heavy external image processing crates.
 - **Random Code Generation**: Secure text generation using a strictly safe character set (`ABCDEFGHJKLMNPQRSTUVWXYZ23456789`) to prevent ambiguous characters like `0` vs `O` or `1` vs `I`.
-- **Fluent API**: Highly configurable `CaptchaBuilder` for seamless integration.
+- **Fluent API**: Highly configurable `CaptchaBuilder` for seamless integration, deserializable from `CaptchaConfig` (TOML/JSON/YAML via serde).
 
 ## Usage
 
