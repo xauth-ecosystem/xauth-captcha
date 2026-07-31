@@ -26,8 +26,8 @@ use xauth_captcha::{CaptchaBuilder, CaptchaConfig};
 fn main() {
     // You can use the Builder directly
     let (text, image) = CaptchaBuilder::new()
-        .width(128)
-        .height(128)
+        .width(256)
+        .height(80)
         .length(6)
         .build();
     
