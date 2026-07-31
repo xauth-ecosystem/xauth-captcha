@@ -3,6 +3,7 @@ name = "xauth-captcha"
 version = "0.1.2"
 description = "A lightweight, robust, and dependency-minimal CAPTCHA generation library for Rust"
 license-file = "LICENSE"
+authors = ["Serhii Cherneha"]
 edition = "2024"
 
 [dependencies]
