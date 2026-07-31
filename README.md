@@ -18,6 +18,8 @@ A lightweight, robust, and dependency-minimal CAPTCHA generation library for Rus
 
 ## Usage
 
+![Example CAPTCHA](example.png)
+
 ```rust
 use xauth_captcha::{CaptchaBuilder, CaptchaConfig};
 
