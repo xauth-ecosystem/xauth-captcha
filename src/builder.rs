@@ -135,30 +135,52 @@ impl<'a> CaptchaBuilder<'a> {
             let sin_a = rad.sin();
 
             if let Some(bounding_box) = glyph.pixel_bounding_box() {
-                let width = (bounding_box.max.x - bounding_box.min.x) as f32;
-                let height = (bounding_box.max.y - bounding_box.min.y) as f32;
-                let cx = width / 2.0;
-                let cy = height / 2.0;
+                let width = (bounding_box.max.x - bounding_box.min.x) as usize;
+                let height = (bounding_box.max.y - bounding_box.min.y) as usize;
+                let cx = width as f32 / 2.0;
+                let cy = height as f32 / 2.0;
 
+                let mut char_map = vec![0.0_f32; width * height];
                 glyph.draw(|x, y, v| {
-                    let rx = x as f32 - cx;
-                    let ry = y as f32 - cy;
-
-                    let rot_x = rx * cos_a - ry * sin_a;
-                    let rot_y = rx * sin_a + ry * cos_a;
-
-                    let px = (rot_x + cx + bounding_box.min.x as f32) as i32;
-                    let py = (rot_y + cy + bounding_box.min.y as f32) as i32;
-
-                    if px >= 0
-                        && px < self.width as i32
-                        && py >= 0
-                        && py < self.height as i32
-                        && v > 0.5
-                    {
-                        image.put_pixel(px as u32, py as u32, color);
+                    let idx = (y as usize) * width + (x as usize);
+                    if idx < char_map.len() {
+                        char_map[idx] = v;
                     }
                 });
+
+                let radius = (cx * cx + cy * cy).sqrt().ceil() as i32;
+                let center_x = bounding_box.min.x + cx as i32;
+                let center_y = bounding_box.min.y + cy as i32;
+
+                for py in (center_y - radius)..=(center_y + radius) {
+                    for px in (center_x - radius)..=(center_x + radius) {
+                        if px >= 0 && px < self.width as i32 && py >= 0 && py < self.height as i32 {
+                            let dx = px as f32 - center_x as f32;
+                            let dy = py as f32 - center_y as f32;
+
+                            let rx = dx * cos_a + dy * sin_a;
+                            let ry = -dx * sin_a + dy * cos_a;
+
+                            let sx = (rx + cx).round() as i32;
+                            let sy = (ry + cy).round() as i32;
+
+                            if sx >= 0 && sx < width as i32 && sy >= 0 && sy < height as i32 {
+                                let idx = (sy as usize) * width + (sx as usize);
+                                let v = char_map[idx];
+
+                                if v > 0.01 {
+                                    let bg = image.get_pixel(px as u32, py as u32);
+                                    let blended = Rgb([
+                                        (color[0] as f32 * v + bg[0] as f32 * (1.0 - v)) as u8,
+                                        (color[1] as f32 * v + bg[1] as f32 * (1.0 - v)) as u8,
+                                        (color[2] as f32 * v + bg[2] as f32 * (1.0 - v)) as u8,
+                                    ]);
+                                    image.put_pixel(px as u32, py as u32, blended);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
