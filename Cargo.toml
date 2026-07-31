@@ -2,8 +2,8 @@
 name = "xauth-captcha"
 version = "0.1.2"
 description = "A lightweight, robust, and dependency-minimal CAPTCHA generation library for Rust"
-license-file = "LICENSE"
 authors = ["Serhii Cherneha"]
+license-file = "LICENSE"
 repository = "https://github.com/xauth-ecosystem/xauth-captcha"
 edition = "2024"
 
